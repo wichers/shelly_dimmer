@@ -1,1 +1,1 @@
-# Shelly Dimmer PWM ESP8266 Arduino library
+# Shelly Dimmer implementation for esphome
