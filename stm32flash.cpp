@@ -23,7 +23,6 @@
 
 #include "stm32flash.h"
 #include "debug.h"
-#include "utils.h"
 
 #include "dev_table.h"
 
