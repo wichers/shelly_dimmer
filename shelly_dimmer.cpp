@@ -408,40 +408,40 @@ bool ShdComponent::UpdateFirmware(const uint8_t data[], unsigned int size)
     stm32_t *stm = stm32_init(&Serial, STREAM_SERIAL, 1); 
     if (stm)
     {
-  		off_t 	offset = 0;
-    	uint8_t		buffer[256];
-    	unsigned int	len;
-    	const uint8_t *p_st = data;
-    	uint32_t	addr, start, end;
-    	stm32_err_t s_err;
+      off_t   offset = 0;
+      uint8_t   buffer[256];
+      unsigned int  len;
+      const uint8_t *p_st = data;
+      uint32_t  addr, start, end;
+      stm32_err_t s_err;
 
       stm32_erase_memory(stm, 0, STM32_MASS_ERASE);
 
-   		addr = stm->dev->fl_start;
-   		end = addr + size;
-  		while(addr < end && offset < size) 
-  		{
-    			uint32_t left	= end - addr;
-    			len		= sizeof(buffer) > left ? left : sizeof(buffer);
-    			len		= len > size - offset ? size - offset : len;
+      addr = stm->dev->fl_start;
+      end = addr + size;
+      while(addr < end && offset < size) 
+      {
+          uint32_t left = end - addr;
+          len   = sizeof(buffer) > left ? left : sizeof(buffer);
+          len   = len > size - offset ? size - offset : len;
 
-    			if (len == 0) 
-    			{
-    					break;
-    			}
-        
-    			memcpy(buffer, p_st, len);
-    			p_st += len;
-    	
-    			s_err = stm32_write_memory(stm, addr, buffer, len);
-    			if (s_err != STM32_ERR_OK) 
-    			{
-    			    ret = false;
+          if (len == 0) 
+          {
               break;
-    			}
+          }
+        
+          memcpy(buffer, p_st, len);
+          p_st += len;
+      
+          s_err = stm32_write_memory(stm, addr, buffer, len);
+          if (s_err != STM32_ERR_OK) 
+          {
+              ret = false;
+              break;
+          }
 
-    			addr	+= len;
-    			offset	+= len;
+          addr  += len;
+          offset  += len;
       }
       stm32_close(stm);
     }
