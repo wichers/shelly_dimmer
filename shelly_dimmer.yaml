@@ -1,0 +1,39 @@
+esphome:
+  includes:
+    - debug.h
+    - stm32flash.h
+    - stm32flash.cpp
+    - dev_table.h
+    - shdm-1_v2.48.h
+    - shelly_dimmer.h
+    - shelly_dimmer.cpp
+  name: shelly_dimmer
+  platform: ESP8266
+  board: modwifi
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+logger:
+  baud_rate: 0
+  level: DEBUG
+api:
+ota:
+
+switch:
+sensor:
+light:
+- platform: custom
+  lambda: |-
+    auto dimmer = new shd::ShdComponent();
+    dimmer->calibrate_on_startup = true;
+    dimmer->set_transition_length(0);
+    dimmer->wattage_sensor = new Sensor("Wattage");
+    App.register_sensor(dimmer->wattage_sensor);
+
+    App.register_component(dimmer);
+    return {dimmer};
+
+  lights:
+    name: "Shelly Dimmer"
